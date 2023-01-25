@@ -1,9 +1,117 @@
 package porta_cipher
 
+import (
+	"math/rand"
+	"strings"
+)
+
 // ------------------------------------------------ ---------------------------------------------------------------------
 
 // Table 加密时使用的表
 type Table [][]rune
+
+// NewRandomTable 创建一张随机的加密表
+func NewRandomTable() Table {
+	table := make([][]rune, 13)
+	for rowIndex := 0; rowIndex < 13; rowIndex++ {
+
+		// step 01. 生成一张A-Z的集合
+		letterSet := make(map[rune]struct{}, 0)
+		for i := 0; i < 26; i++ {
+			letterSet[rune('A'+i)] = struct{}{}
+		}
+
+		// step 02. 然后生成一行，就是不断配对，配对时保证不遗漏的同时有一些随机性
+		row := make([]rune, 26)
+		for i := 0; i < 26; i++ {
+			letter := rune('A' + i)
+			// 如果已经处理过了则不重复处理
+			if _, exists := letterSet[letter]; !exists {
+				continue
+			}
+			// set中随机获取一个
+			//var matchTo rune
+			//for key := range letterSet {
+			//	matchTo = key
+			//	break
+			//}
+			// 不借助语言特性了，慢点就慢点
+			var matchTo rune
+			index := rand.Intn(len(letterSet))
+			for key := range letterSet {
+				if index == 0 {
+					matchTo = key
+					break
+				}
+				index--
+			}
+			row[i] = matchTo
+			row[matchTo-'A'] = letter
+			delete(letterSet, matchTo)
+			delete(letterSet, letter)
+		}
+
+		// step 03. 保存生成的行
+		table[rowIndex] = row
+	}
+	return table
+}
+
+// 把加密使用的表格转为字符串返回，用于观察表格长啥样
+// 返回数据样例：
+//
+//	 [
+//		[ I, C, L, O, M ]
+//		[ P, H, D, R, Z ]
+//		[ U, V, F, Y, B ]
+//		[ G, X, T, Q, E ]
+//		[ S, N, K, W, A ]
+//	]
+func (x Table) String() string {
+	sb := strings.Builder{}
+	sb.WriteString("[\n")
+	for _, line := range x {
+		sb.WriteString("\t[ ")
+		for index, column := range line {
+			sb.WriteRune(column)
+			if index+1 != len(line) {
+				sb.WriteString(",")
+			}
+			sb.WriteString(" ")
+		}
+		sb.WriteString("]\n")
+	}
+	sb.WriteString("]")
+	return sb.String()
+}
+
+// 校验这个密码表是否合法
+func (x Table) check() error {
+	for _, row := range x {
+		// 每个字母要恰好出现一次，并且每一对的对应关系是OK的
+		characterCount := make([]int, 26)
+		for index, character := range row {
+			character = toUppercaseIfNeed(character)
+			if character < 'A' || character > 'Z' {
+				return ErrTableCharacterMustLetters
+			}
+			// 统计出现次数
+			characterCount[character-'A']++
+			// 检查对应关系
+			matchToIndex := character - 'A'
+			if row[matchToIndex] != rune('A'+index) {
+				return ErrTableMatchRelationNotOk
+			}
+		}
+		// 检查统计的出现次数
+		for _, count := range characterCount {
+			if count != 1 {
+				return ErrTableRowCharacterNotUniq
+			}
+		}
+	}
+	return nil
+}
 
 // Query 根据行列的字母查询其对应的字母
 func (x Table) Query(rowCharacter rune, columnCharacter rune) (rune, error) {

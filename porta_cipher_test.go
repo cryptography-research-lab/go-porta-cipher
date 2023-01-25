@@ -7,13 +7,18 @@ import (
 )
 
 func TestDecrypt(t *testing.T) {
+
+	table := NewRandomTable()
+
 	plaintext := "helloworld"
 	key := "cryptographyisfuny"
-	encrypt, err := Encrypt(plaintext, key)
+	encrypt, err := Encrypt(plaintext, key, table)
 	assert.Nil(t, err)
-	assert.Equal(t, "VZXSFCLJYX", encrypt)
+	t.Log(encrypt)
+	//assert.Equal(t, "VZXSFCLJYX", encrypt)
 
-	decrypt, err := Decrypt(encrypt, key)
+	decrypt, err := Decrypt(encrypt, key, table)
 	assert.Nil(t, err)
 	assert.Equal(t, strings.ToUpper(plaintext), decrypt)
+	t.Log(decrypt)
 }
