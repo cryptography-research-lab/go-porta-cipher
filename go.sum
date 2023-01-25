@@ -1,5 +1,7 @@
 github.com/cryptography-research-lab/go-cycle-string v0.0.0-20230122064232-94f818a0f902 h1:3DSAk1IXdLDz6khK/rPnf0AA6VJDNXR7VDbrrm75JvE=
 github.com/cryptography-research-lab/go-cycle-string v0.0.0-20230122064232-94f818a0f902/go.mod h1:bO6fhBRSNFb1NRdv1kuIv6aLRU9aLcYK8jOZlbcjzjU=
+github.com/cryptography-research-lab/go-cycle-string v0.0.1 h1:sCcOue8Bv92rVwG0LpAU4BKTGv33oCm5mpyy8XWBNGs=
+github.com/cryptography-research-lab/go-cycle-string v0.0.1/go.mod h1:bO6fhBRSNFb1NRdv1kuIv6aLRU9aLcYK8jOZlbcjzjU=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

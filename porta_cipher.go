@@ -5,7 +5,7 @@ import (
 	"unicode/utf8"
 )
 
-// Encrypt 加密
+// Encrypt 对明文使用Porta加密，输入需要全部是英文字母，大小写不区分
 func Encrypt(plaintext, key string) (string, error) {
 	result := make([]rune, utf8.RuneCountInString(plaintext))
 	keyString := cycle_string.NewCycleString(key)
@@ -20,7 +20,7 @@ func Encrypt(plaintext, key string) (string, error) {
 	return string(result), nil
 }
 
-// Decrypt 解密
+// Decrypt 对使用了Porta加密的密文进行解密
 func Decrypt(ciphertext, key string) (string, error) {
 	return Encrypt(ciphertext, key)
 }

@@ -2,23 +2,29 @@ package porta_cipher
 
 // ------------------------------------------------ ---------------------------------------------------------------------
 
+// Table 加密时使用的表
 type Table [][]rune
 
 // Query 根据行列的字母查询其对应的字母
 func (x Table) Query(rowCharacter rune, columnCharacter rune) (rune, error) {
+
+	// 先对输入做校验
 	rowCharacter = toUppercaseIfNeed(rowCharacter)
 	columnCharacter = toUppercaseIfNeed(columnCharacter)
 	if rowCharacter < 'A' || rowCharacter > 'Z' {
-		return ' ', ErrInputError
+		return ' ', ErrInputCharacter
 	}
 	if columnCharacter < 'A' || columnCharacter > 'Z' {
-		return ' ', ErrInputError
+		return ' ', ErrInputCharacter
 	}
+
+	// 然后根据行列的字符做路由，找到对应的要映射到的字符
 	rowIndex := (rowCharacter - 'A') / 2
-	columnINdex := columnCharacter - 'A'
-	return x[rowIndex][columnINdex], nil
+	columnIndex := columnCharacter - 'A'
+	return x[rowIndex][columnIndex], nil
 }
 
+// 如果是小写字母的话，将其转为大写字母，否则将其原样返回
 func toUppercaseIfNeed(character rune) rune {
 	if character >= 'a' && character <= 'z' {
 		character -= 32
@@ -28,7 +34,7 @@ func toUppercaseIfNeed(character rune) rune {
 
 // ------------------------------------------------ ---------------------------------------------------------------------
 
-// DefaultTable 默认的表
+// DefaultTable 默认的加密时使用的映射表，这张表是约定好的
 // KEYS| A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 // ----|----------------------------------------------------
 // A,B | N O P Q R S T U V W X Y Z A B C D E F G H I J K L M
